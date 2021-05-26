@@ -1,4 +1,5 @@
 //var bddServer=nano("http://webmaster31anonymail:rns2F2kcXR@couchdb.cloudno.de:5984/theverylittlewar")
+const checkmodule=require("../functions/check.js");
 const fs=require("fs");
 module.exports = {
 	name:'users',
@@ -8,16 +9,11 @@ module.exports = {
 		switch(body_data.mode){
 			case "detailed":
 				let connections=require("/mnt/connections.json");
-				if(body_data.token in connections){
-					if(connections[body_data.token]==body_data.username){
+				if(checkmodule.usercheck(body_data.username,body_data.token)){
 						res.writeHead(200,{'Content-Type':'application/json'});
+						data=require("/mnt/users.json");
 						res.write(JSON.stringify(data[body_data.username]));
 						res.end();
-					}else{
-						res.writeHead(403,{'Content-Type':'application/json'});
-						res.write("{error:\"Not authorized\"}");
-						res.end();
-					}
 				}else{
 					res.writeHead(401,{'Content-Type':'application/json'});
 					res.write("{error:\"Not connected\"}");
@@ -89,7 +85,7 @@ module.exports = {
 						"champDeForce":0,
 						"usineDExplosif":0,
 						"condenseur":0,
-						"booster":0,
+						"booster":0
 					},
 					"QG":{
 						"production":[4,4,4,4,4,4,4,4,4,4,4,4],
@@ -105,15 +101,24 @@ module.exports = {
 						"pertes_combat":0,
 						"destruction":0,
 						"pillage":0,
-						"combats":0,
+						"combats":0
 					},
-					"PV_batiments":{ //reste a définir
+					"PV_batiments":{
 						"generateur":0,
 						"producteur":0,
 						"stockage":0,
 					},
 					"molecules":[null,null,null,null,null],
-					"medailles":undefined, //reste a définir
+					"medailles":{
+						"def":-1,
+						"atk":-1,
+						"mol":-1,
+						"tps":-1,
+						"prt":-1,
+						"des":-1,
+						"pil":-1,
+						"cmb":-1
+					},
 					"raports":[],
 					"positionX":px,
 					"positionY":py,
